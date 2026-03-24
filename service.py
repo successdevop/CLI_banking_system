@@ -118,3 +118,25 @@ def deposit():
     user = find_user()
     amount = validate_amount_input("Enter deposit amount: ")
     user["balance"] += amount
+    user["transactions"].append(("deposit", amount))
+
+
+def withdraw():
+    """
+    this function takes the user amount and subtracts it from the user available balance
+    after validating all user inputs
+    :return: None
+    """
+    if len(users) == 0:
+        return
+
+    user = find_user()
+    amount = validate_amount_input("Enter withdrawal amount: ")
+    if user["balance"] < amount:
+        print("Insufficient balance")
+    else:
+        user["balance"] -= amount
+    user["transactions"].append(("withdraw", amount))
+
+
+print(users)

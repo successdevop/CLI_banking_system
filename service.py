@@ -76,19 +76,22 @@ def generate_pin() -> str:
     return "".join(str(num) for num in pin)
 
 
-def validate_amount_input(prompt) -> float:
+def validate_amount_input(prompt) -> int:
     """
     this function takes the user input and checks if it is an actually number
     and that the number is also not negative
     :param prompt: user input
     :return: float number
     """
-    amount = float(input(prompt))
-    try:
-        if amount > 0:
-            return float(amount)
-    except ValueError:
-        print("Invalid amount: (amount cannot be negative/empty)")
+    while True:
+        amount = input(prompt)
+        if amount.isnumeric():
+            if int(amount) > 0:
+                return int(amount)
+            else:
+                print("Amount must be greater than 0")
+        else:
+            print("Invalid amount: (amount cannot be negative/empty)")
 
 
 def find_receiver() -> dict:
@@ -100,7 +103,7 @@ def find_receiver() -> dict:
     receiver_info = {}
 
     while True:
-        receiver_account_number = input("Enter your account number: ")
+        receiver_account_number = input("Enter receiver's account number: ")
 
         if receiver_account_number.isnumeric():
             if len(receiver_account_number) == 10:
@@ -239,3 +242,4 @@ def top_3_richest_account():
 
     for top_3 in reversed(top_3_accounts):
         print(f"Name: {top_3["name"]} - Balance: #{top_3["balance"]}")
+

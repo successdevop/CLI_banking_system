@@ -7,7 +7,8 @@ users = [{
         "pin": "4444",
         "transactions": [
             ("deposit", 2000),
-            ("withdraw", 1000)
+            ("withdraw", 1000),
+            ("transfer", 4000)
         ]
     }]
 
@@ -64,6 +65,31 @@ def validate_amount_input(prompt) -> float:
             return float(amount)
     except ValueError:
         print("Invalid amount: (amount cannot be negative/empty)")
+
+
+def find_receiver() -> dict:
+    """
+    this function searches for a user in our user's list. If the user exist, it returns
+    the user otherwise it prints user not found
+    :return: a user dictionary
+    """
+    receiver_info = {}
+
+    while True:
+        receiver_account_number = input("Enter your account number: ")
+
+        if receiver_account_number.isnumeric():
+            if len(receiver_account_number) == 10:
+                receiver_info["account_number"] = receiver_account_number
+                break
+        print("Invalid account number")
+        print()
+
+    for user_ in users:
+        if receiver_info["account_number"] == user_["account_number"]:
+            receiver_info = user_
+            return receiver_info
+    print("account not found")
 
 
 def find_user() -> dict:
@@ -136,7 +162,44 @@ def withdraw():
         print("Insufficient balance")
     else:
         user["balance"] -= amount
-    user["transactions"].append(("withdraw", amount))
+        user["transactions"].append(("withdraw", amount))
 
+
+def transfer():
+    """
+    this function transfers money from one user"s account to another user"s account using
+    the account number for validation
+    :return: None
+    """
+    if len(users) == 0:
+        return
+
+    user = find_user()
+    amount = validate_amount_input("Enter transfer amount: ")
+    receiver_user = find_receiver()
+    if user["balance"] < amount:
+        print("Insufficient balance")
+    else:
+        user["balance"] -= amount
+        receiver_user["balance"] += amount
+        user["transactions"].append(("transfer", amount))
+        receiver_user["transactions"].append(("deposit", amount))
+
+
+def check_balance():
+    """
+    this function prints a user's balance
+    :return: None
+    """
+    user = find_user()
+    print(f"Balance: #{user["balance"]}")
+
+
+def transaction_history():
+    """
+    this function loops through a user's transaction list and displays the transaction history
+    :return: None
+    """
+    user = find_user()
 
 print(users)

@@ -1,16 +1,40 @@
 import random
+from operator import itemgetter
 
 users = [{
-        "name": "John",
-        "account_number": "1234567890",
-        "balance": 5000,
-        "pin": "4444",
+    "name": "John",
+    "account_number": "1234567890",
+    "balance": 5000,
+    "pin": "4444",
+    "transactions": [
+        ("deposit", 2000),
+        ("withdraw", 1000),
+        ("transfer", 4000)
+    ]
+},
+    {
+        "name": "faith",
+        "account_number": "1238750642",
+        "balance": 2000,
+        "pin": "0415",
         "transactions": [
             ("deposit", 2000),
             ("withdraw", 1000),
-            ("transfer", 4000)
         ]
-    }]
+    },
+    {
+        "name": "adam",
+        "account_number": "5672890153",
+        "balance": 7900,
+        "pin": "0915",
+        "transactions": [
+            ("deposit", 2000),
+            ("withdraw", 1000),
+            ("deposit", 1000),
+            ("withdraw", 3500),
+        ]
+    }
+]
 
 
 def generate_account_number() -> str:
@@ -201,5 +225,17 @@ def transaction_history():
     :return: None
     """
     user = find_user()
+    for t_detail, t_amount in user["transactions"]:
+        print(f"{t_detail.capitalize()}: {t_amount}")
 
-print(users)
+
+def top_3_richest_account():
+    """
+    this account sorts through the user's list and prints the top 3 richest account
+    :return: None
+    """
+    users.sort(key=itemgetter("balance"))
+    top_3_accounts = users[-3:]
+
+    for top_3 in reversed(top_3_accounts):
+        print(f"Name: {top_3["name"]} - Balance: #{top_3["balance"]}")

@@ -121,8 +121,7 @@ def find_receiver() -> dict:
 
     for user_ in users:
         if receiver_info["account_number"] == user_["account_number"]:
-            receiver_info = user_
-            return receiver_info
+            return user_
     print("account not found")
 
 
@@ -148,8 +147,7 @@ def find_user() -> dict:
 
     for user in users:
         if (data["pin"] == user["pin"]) and (data["account_number"] == user["account_number"]):
-            data = user
-            return data
+            return user
     print("user not found")
 
 
@@ -164,6 +162,7 @@ def create_account():
 
     data = {"name": name, "account_number": account_number, "balance": 0, "pin": pin, "transactions": []}
     users.append(data)
+    print(f"Thank you for creating an account with us {name}\nYour account number is {data['account_number']}")
 
 
 def deposit():
@@ -176,6 +175,9 @@ def deposit():
         return
 
     user = find_user()
+    if not user:
+        return
+
     amount = validate_amount_input("Enter deposit amount: ")
     user["balance"] += amount
     user["transactions"].append(("deposit", amount))
@@ -191,6 +193,9 @@ def withdraw():
         return
 
     user = find_user()
+    if not user:
+        return
+
     amount = validate_amount_input("Enter withdrawal amount: ")
     if user["balance"] < amount:
         print("Insufficient balance")
@@ -209,8 +214,12 @@ def transfer():
         return
 
     user = find_user()
-    amount = validate_amount_input("Enter transfer amount: ")
     receiver_user = find_receiver()
+
+    if not user and not receiver_user:
+        return
+
+    amount = validate_amount_input("Enter transfer amount: ")
     if user["balance"] < amount:
         print("Insufficient balance")
     else:
@@ -226,6 +235,9 @@ def check_balance():
     :return: None
     """
     user = find_user()
+    if not user:
+        return
+
     print(f"Balance: #{user["balance"]}")
 
 
@@ -235,6 +247,9 @@ def transaction_history():
     :return: None
     """
     user = find_user()
+    if not user:
+        return
+
     for t_detail, t_amount in user["transactions"]:
         print(f"{t_detail.capitalize()}: {t_amount}")
 
@@ -244,11 +259,10 @@ def top_3_richest_account():
     this account sorts through the user's list and prints the top 3 richest account
     :return: None
     """
-    users.sort(key=itemgetter("balance"))
-    top_3_accounts = users[-3:]
+    top_account = sorted(users, key=itemgetter("balance"), reverse=True)[:3]
 
-    for top_3 in reversed(top_3_accounts):
-        print(f"Name: {top_3["name"]} - Balance: #{top_3["balance"]}")
+    for top_3 in top_account:
+        print(f"Name: {top_3["name"]} - Balance: #{top_3['balance']}")
 
 
 def main():

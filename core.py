@@ -1,16 +1,33 @@
+import datetime
 import random
-from operator import itemgetter
+from storage import load_data, save_data, log_data
+from config import LOG_MSG, DATA_FILE
 
 
-def generate_account_number() -> str:
+def generate_id(customers_data: list):
+    """
+    this function generates a unique id for every account created for a customer in the
+    bank
+    :param: customer's database
+    :return: an int value
+    """
+    customer_id = 1
+    while True:
+        if not any(acct["id"] == customer_id for acct in customers_data):
+            return customer_id
+        customer_id += 1
+
+
+def generate_account_number(customers_data: list) -> str:
     """
     this function generates account number for users. It uses the while loop to generate
     10 random numbers stored in a list, which makes the customer unique account number
+    :param: customer's database
     :return: a string of 10 random numbers
     """
     while True:
         acc = "".join(str(random.randint(1, 9)) for _ in range(10))
-        if not any(user["account_number"] == acc for user in users):
+        if not any(user["account_number"] == acc for user in customers_data):
             return acc
 
 
@@ -27,15 +44,16 @@ def validate_name(prompt) -> str:
         print("Name cannot be empty and must be at-least 3 characters")
 
 
-def generate_pin() -> str:
+def generate_pin(customers_data: list) -> str:
     """
     this function generates pin for users. It uses the while loop to generate
     4 random numbers stored in a list, which makes the customer unique pin
+    :param: customer's database
     :return: a string of 4 random numbers
     """
     while True:
         pin = "".join(str(random.randint(1, 9)) for _ in range(4))
-        if not any(u["pin"] == pin for u in users):
+        if not any(u["pin"] == pin for u in customers_data):
             return pin
 
 
@@ -107,18 +125,24 @@ def find_user() -> dict:
     print("user not found")
 
 
-def create_account():
+def create_account(customer_data: list):
     """
     this function creates an account for users and store the information
-    in our user's list
+    in our customer's list
+    :param customer_data: customer's database
     """
+    customer_id = generate_id(customer_data)
     name = validate_name("Please enter your name: ")
-    account_number = generate_account_number()
-    pin = generate_pin()
+    account_number = generate_account_number(customer_data)
+    pin = generate_pin(customer_data)
 
-    data = {"name": name, "account_number": account_number, "balance": 0, "pin": pin, "transactions": []}
-    users.append(data)
-    print(f"Thank you for creating an account with us {name}\nYour account number is {data['account_number']}")
+    customer = {"id": customer_id, "name": name, "account_number": account_number, "pin": pin, "balance": 0,
+                "transactions": [], "created_at": datetime.datetime.now().isoformat()}
+
+    customer_data.append(customer)
+    save_data(customer_data, DATA_FILE)
+    print(f"Thank you for creating an account with us {name.capitalize()}\nYour "
+          f"account number is {customer['account_number']}")
 
 
 def deposit():

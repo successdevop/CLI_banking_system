@@ -2,127 +2,7 @@ import datetime
 import random
 from storage import load_data, save_data, log_data
 from config import LOG_MSG, DATA_FILE
-
-
-def generate_id(customers_data: list):
-    """
-    this function generates a unique id for every account created for a customer in the
-    bank
-    :param: customer's database
-    :return: an int value
-    """
-    customer_id = 1
-    while True:
-        if not any(acct["id"] == customer_id for acct in customers_data):
-            return customer_id
-        customer_id += 1
-
-
-def generate_account_number(customers_data: list) -> str:
-    """
-    this function generates account number for users. It uses the while loop to generate
-    10 random numbers stored in a list, which makes the customer unique account number
-    :param: customer's database
-    :return: a string of 10 random numbers
-    """
-    while True:
-        acc = "".join(str(random.randint(1, 9)) for _ in range(10))
-        if not any(user["account_number"] == acc for user in customers_data):
-            return acc
-
-
-def validate_name(prompt) -> str:
-    """
-    this function validates the user's name
-    :param prompt: it takes the user input from the CLI
-    :return: a string that must be or greater than three characters
-    """
-    while True:
-        name = input(prompt).strip()
-        if name and len(name) >= 3:
-            return name
-        print("Name cannot be empty and must be at-least 3 characters")
-
-
-def generate_pin(customers_data: list) -> str:
-    """
-    this function generates pin for users. It uses the while loop to generate
-    4 random numbers stored in a list, which makes the customer unique pin
-    :param: customer's database
-    :return: a string of 4 random numbers
-    """
-    while True:
-        pin = "".join(str(random.randint(1, 9)) for _ in range(4))
-        if not any(u["pin"] == pin for u in customers_data):
-            return pin
-
-
-def validate_amount_input(prompt) -> int:
-    """
-    this function takes the user input and checks if it is an actually number
-    and that the number is also not negative
-    :param prompt: user input
-    :return: float number
-    """
-    while True:
-        amount = input(prompt)
-        if amount.isnumeric():
-            if int(amount) > 0:
-                return int(amount)
-            else:
-                print("Amount must be greater than 0")
-        else:
-            print("Invalid amount: (amount cannot be negative/empty)")
-
-
-def find_receiver() -> dict:
-    """
-    this function searches for a user in our user's list. If the user exist, it returns
-    the user otherwise it prints user not found
-    :return: a user dictionary
-    """
-    receiver_info = {}
-
-    while True:
-        receiver_account_number = input("Enter receiver's account number: ")
-
-        if receiver_account_number.isnumeric():
-            if len(receiver_account_number) == 10:
-                receiver_info["account_number"] = receiver_account_number
-                break
-        print("Invalid account number")
-        print()
-
-    for user_ in users:
-        if receiver_info["account_number"] == user_["account_number"]:
-            return user_
-    print("account not found")
-
-
-def find_user() -> dict:
-    """
-    this function searches for a user in our user's list. If the user exist, it returns
-    the user otherwise it prints user not found
-    :return: a user dictionary
-    """
-    data = {}
-
-    while True:
-        pin = input("Enter your PIN: ")
-        account_number = input("Enter your account number: ")
-
-        if pin.isnumeric() and account_number.isnumeric():
-            if len(pin) == 4 and len(account_number) == 10:
-                data["pin"] = pin
-                data["account_number"] = account_number
-                break
-        print("Invalid PIN or account number")
-        print()
-
-    for user in users:
-        if (data["pin"] == user["pin"]) and (data["account_number"] == user["account_number"]):
-            return user
-    print("user not found")
+from utils import *
 
 
 def create_account(customer_data: list):
@@ -137,7 +17,7 @@ def create_account(customer_data: list):
     pin = generate_pin(customer_data)
 
     customer = {"id": customer_id, "name": name, "account_number": account_number, "pin": pin, "balance": 0,
-                "transactions": [], "created_at": datetime.datetime.now().isoformat()}
+                "transactions": [], "created_at": datetime.datetime.now().isoformat(), "user_locked": False}
 
     customer_data.append(customer)
     save_data(customer_data, DATA_FILE)
@@ -245,39 +125,3 @@ def top_3_richest_account():
         print(f"Name: {top_3["name"]} - Balance: #{top_3['balance']}")
 
 
-def main():
-    while True:
-        print("1. Create Account")
-        print("2. Deposit")
-        print("3. Withdraw")
-        print("4. Transfer")
-        print("5. Balance")
-        print("6. History")
-        print("7. Top_3_account")
-        print("0. Exit")
-
-        choice = input("> ")
-
-        if choice == "1":
-            create_account()
-        elif choice == "2":
-            deposit()
-        elif choice == "3":
-            withdraw()
-        elif choice == "4":
-            transfer()
-        elif choice == "5":
-            check_balance()
-        elif choice == "6":
-            transaction_history()
-        elif choice == "7":
-            top_3_richest_account()
-        elif choice == "0":
-            break
-        else:
-            print("Invalid number")
-        print(users)
-        print()
-
-
-main()

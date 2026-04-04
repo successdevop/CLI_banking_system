@@ -1,4 +1,4 @@
-from service import *
+from core import *
 
 
 def main():

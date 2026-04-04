@@ -1,41 +1,6 @@
 import random
 from operator import itemgetter
 
-users = [{
-    "name": "John",
-    "account_number": "1234567890",
-    "balance": 5000,
-    "pin": "4444",
-    "transactions": [
-        ("deposit", 2000),
-        ("withdraw", 1000),
-        ("transfer", 4000)
-    ]
-},
-    {
-        "name": "faith",
-        "account_number": "1238750642",
-        "balance": 2000,
-        "pin": "0415",
-        "transactions": [
-            ("deposit", 2000),
-            ("withdraw", 1000),
-        ]
-    },
-    {
-        "name": "adam",
-        "account_number": "5672890153",
-        "balance": 7900,
-        "pin": "0915",
-        "transactions": [
-            ("deposit", 2000),
-            ("withdraw", 1000),
-            ("deposit", 1000),
-            ("withdraw", 3500),
-        ]
-    }
-]
-
 
 def generate_account_number() -> str:
     """
@@ -43,11 +8,6 @@ def generate_account_number() -> str:
     10 random numbers stored in a list, which makes the customer unique account number
     :return: a string of 10 random numbers
     """
-    # numbers = []
-    # while len(numbers) < 10:
-    #     numbers.append(random.randint(1, 9))
-    # return "".join(str(num) for num in numbers)
-
     while True:
         acc = "".join(str(random.randint(1, 9)) for _ in range(10))
         if not any(user["account_number"] == acc for user in users):
@@ -73,10 +33,6 @@ def generate_pin() -> str:
     4 random numbers stored in a list, which makes the customer unique pin
     :return: a string of 4 random numbers
     """
-    # pin = []
-    # while len(pin) < 4:
-    #     pin.append(random.randint(1, 9))
-    # return "".join(str(num) for num in pin)
     while True:
         pin = "".join(str(random.randint(1, 9)) for _ in range(4))
         if not any(u["pin"] == pin for u in users):

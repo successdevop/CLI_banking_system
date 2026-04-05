@@ -160,11 +160,12 @@ def transaction_history(customers_data: list):
 def top_3_richest_account(customers_data: list):
     """
     this account sorts through the user's list and prints the top 3 richest account
+    :param customers_data: customer's database
     :return: None
     """
-    top_account = sorted(users, key=itemgetter("balance"), reverse=True)[:3]
+    top_account = sorted(customers_data, key=lambda x: x.get('balance') or 0, reverse=True)[:3]
 
     for top_3 in top_account:
-        print(f"Name: {top_3["name"]} - Balance: #{top_3['balance']}")
+        print(f"Name: {top_3['name']} - Balance: #{top_3['balance']}")
 
 

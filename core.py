@@ -1,5 +1,4 @@
-import datetime
-import random
+from datetime import datetime
 from storage import load_data, save_data, log_data
 from config import LOG_MSG, DATA_FILE
 from utils import *
@@ -13,11 +12,11 @@ def create_account(customer_data: list):
     """
     customer_id = generate_id(customer_data)
     name = validate_name("Please enter your name: ")
-    account_number = generate_account_number(customer_data)
-    pin = generate_pin(customer_data)
+    account_number = generate_secret_keys(customer_data, 10)
+    pin = generate_secret_keys(customer_data, 4)
 
     customer = {"id": customer_id, "name": name, "account_number": account_number, "pin": pin, "balance": 0,
-                "transactions": [], "created_at": datetime.datetime.now().isoformat(), "user_locked": False}
+                "transactions": [], "created_at": datetime.now().isoformat(), "user_locked": False}
 
     customer_data.append(customer)
     save_data(customer_data, DATA_FILE)
@@ -25,22 +24,30 @@ def create_account(customer_data: list):
           f"account number is {customer['account_number']}")
 
 
-def deposit():
+def deposit(customers_data: list):
     """
     this function takes the user amount and adds it to the user available balance
     after validating all user inputs
     :return: None
     """
-    if len(users) == 0:
-        return
-
-    user = find_user()
+    user = authenticate(customers_data)
     if not user:
         return
 
     amount = validate_amount_input("Enter deposit amount: ")
     user["balance"] += amount
-    user["transactions"].append(("deposit", amount))
+    user["transactions"].append(
+        {
+            "type": "deposit",
+            "amount": amount,
+            "timestamp": datetime.now().isoformat()
+        }
+    )
+
+    save_data(customers_data, DATA_FILE)
+    msg = f"{user['name']} deposited {amount} to your account. Current balance: #{user['balance']}"
+    log_data(msg, LOG_MSG)
+    print(msg)
 
 
 def withdraw():

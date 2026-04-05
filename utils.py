@@ -12,15 +12,10 @@ def authenticate(customers_data: list):
     message telling the user to visit the bank to unblock the account else it asks the user to enter
     their PIN. The user has three attempts to enter their pin else the account is Locked. If the user
     meets all the conditions, the user can carry out their transaction
+    :param customers_data: customers database
     """
-    acc = input("Enter your account number: ")
-    if not acc.isnumeric() and len(acc) != 10:
-        print("Invalid account number")
-        return
-
-    customer = next((c for c in customers_data if c["account_number"] == acc), None)
+    customer = find_user(customers_data)
     if not customer:
-        print("Account not found")
         return
 
     if customer["user_locked"]:
@@ -44,11 +39,11 @@ def authenticate(customers_data: list):
                 return customer
 
 
-def generate_id(customers_data: list):
+def generate_id(customers_data: list) -> int:
     """
     this function generates a unique id for every account created for a customer in the
     bank
-    :param: customer's database
+    :param customers_data: customer's database
     :return: an int value
     """
     customer_id = 1
@@ -86,7 +81,7 @@ def validate_name(prompt) -> str:
         print("Name cannot be empty and must be at-least 3 characters")
 
 
-def validate_amount_input(prompt) -> int:
+def validate_amount_input(prompt) -> float:
     """
     this function takes the user input and checks if it is an actually number
     and that the number is also not negative
@@ -96,8 +91,8 @@ def validate_amount_input(prompt) -> int:
     while True:
         amount = input(prompt)
         if amount.isnumeric():
-            if int(amount) > 0:
-                return int(amount)
+            if float(amount) > 0:
+                return float(amount)
             else:
                 print("Amount must be greater than 0")
         else:

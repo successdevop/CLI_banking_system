@@ -130,32 +130,34 @@ def transfer(customers_data: list):
         print("Insufficient balance")
 
 
-def check_balance():
+def check_balance(customers_data: list):
     """
     this function prints a user's balance
+    :param customers_data: customer's database
     :return: None
     """
-    user = find_user()
-    if not user:
+    customer = authenticate(customers_data)
+    if not customer:
         return
 
-    print(f"Balance: #{user["balance"]}")
+    print(f"Balance: #{customer["balance"]}")
 
 
-def transaction_history():
+def transaction_history(customers_data: list):
     """
     this function loops through a user's transaction list and displays the transaction history
+    :param customers_data: customer's database
     :return: None
     """
-    user = find_user()
-    if not user:
+    customer = authenticate(customers_data)
+    if not customer:
         return
 
-    for t_detail, t_amount in user["transactions"]:
-        print(f"{t_detail.capitalize()}: {t_amount}")
+    for t in customer["transactions"]:
+        print(f"{t['timestamp'].split('T')[0]} {f'{t["type"]} Out' if t['type'] == 'transfer' else t['type']}: #{t['amount']}")
 
 
-def top_3_richest_account():
+def top_3_richest_account(customers_data: list):
     """
     this account sorts through the user's list and prints the top 3 richest account
     :return: None

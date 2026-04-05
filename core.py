@@ -157,6 +157,23 @@ def transaction_history(customers_data: list):
         print(f"{t['timestamp'].split('T')[0]} {f'{t["type"]} Out' if t['type'] == 'transfer' else t['type']}: #{t['amount']}")
 
 
+def analytics(customers_data: list):
+    total_money_in_the_bank = sum(c["balance"] for c in customers_data)
+
+    richest_customer = max(customers_data, key=lambda x: x.get("balance") or 0, default=None)
+
+    oldest_acct = min(customers_data, key=lambda x: x.get("created_at") or 0)
+
+    highest_transaction = max(customers_data, key=lambda x: len(x.get("transactions")) or 0)
+
+    print(f"""
+    ========= Bank Statistics 2026 =========
+    Total money in the bank:    {total_money_in_the_bank}
+    Richest bank customer:      {richest_customer['name']} (#{richest_customer['balance']})
+    Oldest account holder:      Account number: {oldest_acct['account_number']} - Date created: {oldest_acct['created_at']} - Account holder: {oldest_acct['name']}
+    Account with highest transactions: Account holder: {highest_transaction['name']} - Transactions: {highest_transaction['transactions']}
+    """)
+
 def top_3_richest_account(customers_data: list):
     """
     this account sorts through the user's list and prints the top 3 richest account

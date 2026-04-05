@@ -28,6 +28,7 @@ def deposit(customers_data: list):
     """
     this function takes the user amount and adds it to the user available balance
     after validating all user inputs
+    :param customers_data: customer's database
     :return: None
     """
     user = authenticate(customers_data)
@@ -54,6 +55,7 @@ def withdraw(customers_data: list):
     """
     this function takes the user amount and subtracts it from the user available balance
     after validating all user inputs
+    :param customers_data: customer's database
     :return: None
     """
     user = authenticate(customers_data)
@@ -77,29 +79,55 @@ def withdraw(customers_data: list):
         print("Insufficient balance")
 
 
-def transfer():
+def transfer(customers_data: list):
     """
     this function transfers money from one user"s account to another user"s account using
-    the account number for validation
+    the account number for validation. And it also prevents user from transferring money
+    to self
+    :param customers_data: customer's database
     :return: None
     """
-    if len(users) == 0:
+
+    customer = authenticate(customers_data)
+    if not customer:
         return
 
-    user = find_user()
-    receiver_user = find_receiver()
+    receiver_acct = find_user(customers_data)
+    if not receiver_acct:
+        return
 
-    if not user and not receiver_user:
+    if customer == receiver_acct:
+        print("You can't transfer to self")
         return
 
     amount = validate_amount_input("Enter transfer amount: ")
-    if user["balance"] < amount:
-        print("Insufficient balance")
+    if customer["balance"] > amount:
+        customer["balance"] -= amount
+        receiver_acct["balance"] += amount
+
+        customer["transactions"].append(
+            {
+                "type": "transfer",
+                "amount": amount,
+                "timestamp": datetime.now().isoformat()
+            }
+        )
+
+        receiver_acct["transactions"].append(
+            {
+                "type": "deposit",
+                "amount": amount,
+                "timestamp": datetime.now().isoformat()
+            }
+        )
+
+        save_data(customers_data, DATA_FILE)
+        msg = (f"{customer['name'].capitalize()}, made a transfer of #{amount} to {receiver_acct['name']}. "
+               f"Current balance: #{customer['balance']}")
+        log_data(msg, LOG_MSG)
+        print(msg)
     else:
-        user["balance"] -= amount
-        receiver_user["balance"] += amount
-        user["transactions"].append(("transfer", amount))
-        receiver_user["transactions"].append(("deposit", amount))
+        print("Insufficient balance")
 
 
 def check_balance():

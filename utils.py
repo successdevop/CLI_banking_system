@@ -104,25 +104,22 @@ def validate_amount_input(prompt) -> int:
             print("Invalid amount: (amount cannot be negative/empty)")
 
 
-def find_receiver() -> dict:
+def find_user(customers_data: list):
     """
-    this function searches for a user in our user's list. If the user exist, it returns
+    this function searches for a user in our customer's list. If the user exist, it returns
     the user otherwise it prints user not found
+    :param customers_data: customer's database
     :return: a user dictionary
     """
-    receiver_info = {}
-
-    while True:
-        receiver_account_number = input("Enter receiver's account number: ")
-
-        if receiver_account_number.isnumeric():
-            if len(receiver_account_number) == 10:
-                receiver_info["account_number"] = receiver_account_number
-                break
+    acc = input("Enter your account number: ")
+    if not acc.isnumeric() and len(acc) != 10:
         print("Invalid account number")
-        print()
+        return
 
-    for user_ in users:
-        if receiver_info["account_number"] == user_["account_number"]:
-            return user_
-    print("account not found")
+    customer = next((c for c in customers_data if c["account_number"] == acc), None)
+    if not customer:
+        print("Account not found")
+        return
+
+    return customer
+

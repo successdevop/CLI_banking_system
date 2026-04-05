@@ -1,5 +1,5 @@
 import random
-from storage import save_data
+from storage import save_data, log_data
 from config import DATA_FILE, LOG_MSG
 
 

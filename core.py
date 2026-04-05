@@ -50,25 +50,31 @@ def deposit(customers_data: list):
     print(msg)
 
 
-def withdraw():
+def withdraw(customers_data: list):
     """
     this function takes the user amount and subtracts it from the user available balance
     after validating all user inputs
     :return: None
     """
-    if len(users) == 0:
-        return
-
-    user = find_user()
+    user = authenticate(customers_data)
     if not user:
         return
 
     amount = validate_amount_input("Enter withdrawal amount: ")
-    if user["balance"] < amount:
-        print("Insufficient balance")
-    else:
+    if user["balance"] > amount:
         user["balance"] -= amount
-        user["transactions"].append(("withdraw", amount))
+        user["transactions"].append({
+            "type": "withdrawal",
+            "amount": amount,
+            "timestamp": datetime.now().isoformat()
+        })
+
+        save_data(customers_data, DATA_FILE)
+        msg = f"{user['name'].capitalize()}, you made a withdrawal of #{amount}. Current balance: #{user['balance']}"
+        log_data(msg, LOG_MSG)
+        print(msg)
+    else:
+        print("Insufficient balance")
 
 
 def transfer():

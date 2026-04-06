@@ -54,18 +54,31 @@ def generate_id(customers_data: list) -> int:
         customer_id += 1
 
 
-def generate_secret_keys(customers_data: list, range_value: int) -> str:
+def generate_account_number(customers_data: list) -> str:
     """
-    this function is used to generate secret keys of any number of character. It can be
-    used to generate account_numbers, PIN e.t.c. It uses the while lop to generate any
-    amount of number required(range_value)
-    :param range_value: the number of secret keys to be generated
+    this function is used to generate 10 unique character for customer's account number.
+    It uses the while loop to check through the customer's base until 10 unique numbers
+    are generated.
     :param customers_data: customer's database
-    :return: a string of unique random numbers
+    :return: a string of 10 unique random numbers
     """
     while True:
-        acc = "".join(str(random.randint(1, 9)) for _ in range(range_value))
+        acc = "".join(str(random.randint(1, 9)) for _ in range(10))
         if not any(user["account_number"] == acc for user in customers_data):
+            return acc
+
+
+def generate_pin(customers_data: list) -> str:
+    """
+    this function is used to generate secret PIN of 4 unique character.
+    It uses the while loop to check through the customer's base until four unique numbers
+    are generated.
+    :param customers_data: customer's database
+    :return: a string of 4 unique random numbers
+    """
+    while True:
+        acc = "".join(str(random.randint(1, 9)) for _ in range(4))
+        if not any(user["pin"] == acc for user in customers_data):
             return acc
 
 

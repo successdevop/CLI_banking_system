@@ -1,0 +1,54 @@
+[
+    {
+        "id": 1,
+        "name": "success",
+        "account_number": "2586344242",
+        "pin": "4335",
+        "balance": 0,
+        "transactions": [],
+        "created_at": "2026-04-06T02:56:05.869028",
+        "user_locked": false
+    },
+    {
+        "id": 2,
+        "name": "Faith Ezebuiro",
+        "account_number": "2917321213",
+        "pin": "6481",
+        "balance": 6000.0,
+        "transactions": [
+            {
+                "type": "deposit",
+                "amount": 25000.0,
+                "timestamp": "2026-04-06T03:22:37.761818"
+            },
+            {
+                "type": "withdrawal",
+                "amount": 9000.0,
+                "timestamp": "2026-04-06T03:31:55.368135"
+            },
+            {
+                "type": "transfer",
+                "amount": 10000.0,
+                "timestamp": "2026-04-06T03:37:01.717706"
+            }
+        ],
+        "created_at": "2026-04-06T02:59:59.251599",
+        "user_locked": false
+    },
+    {
+        "id": 3,
+        "name": "Oluchi Raphael",
+        "account_number": "3768664372",
+        "pin": "4495",
+        "balance": 10000.0,
+        "transactions": [
+            {
+                "type": "deposit",
+                "amount": 10000.0,
+                "timestamp": "2026-04-06T03:37:14.281220"
+            }
+        ],
+        "created_at": "2026-04-06T03:12:36.252196",
+        "user_locked": true
+    }
+]

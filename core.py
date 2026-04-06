@@ -1,6 +1,4 @@
 from datetime import datetime
-from storage import load_data, save_data, log_data
-from config import LOG_MSG, DATA_FILE
 from utils import *
 
 
@@ -20,8 +18,10 @@ def create_account(customer_data: list):
 
     customer_data.append(customer)
     save_data(customer_data, DATA_FILE)
-    print(f"Thank you for creating an account with us {name.capitalize()}\nYour "
-          f"account number is {customer['account_number']}")
+    msg = (f"Thank you for creating an account with us {name.capitalize()}. Your "
+           f"account number is {customer['account_number']}")
+    log_data(msg, LOG_MSG)
+    print(msg)
 
 
 def deposit(customers_data: list):
@@ -158,6 +158,9 @@ def transaction_history(customers_data: list):
 
 
 def analytics(customers_data: list):
+    """
+    this function show bank statistics
+    """
     total_money_in_the_bank = sum(c["balance"] for c in customers_data)
 
     richest_customer = max(customers_data, key=lambda x: x.get("balance") or 0, default=None)
@@ -170,9 +173,12 @@ def analytics(customers_data: list):
     ========= Bank Statistics 2026 =========
     Total money in the bank:    {total_money_in_the_bank}
     Richest bank customer:      {richest_customer['name']} (#{richest_customer['balance']})
-    Oldest account holder:      Account number: {oldest_acct['account_number']} - Date created: {oldest_acct['created_at']} - Account holder: {oldest_acct['name']}
-    Account with highest transactions: Account holder: {highest_transaction['name']} - Transactions: {highest_transaction['transactions']}
+    Oldest account holder:      Account number: {oldest_acct['account_number']} - Date created: 
+                                    {oldest_acct['created_at']} - Account holder: {oldest_acct['name']}
+    Account with highest transactions: Account holder: {highest_transaction['name']} - Transactions: 
+                                            {highest_transaction['transactions']}
     """)
+
 
 def top_3_richest_account(customers_data: list):
     """
@@ -184,5 +190,3 @@ def top_3_richest_account(customers_data: list):
 
     for top_3 in top_account:
         print(f"Name: {top_3['name']} - Balance: #{top_3['balance']}")
-
-

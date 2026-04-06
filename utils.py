@@ -107,7 +107,7 @@ def find_user(customers_data: list):
     :return: a user dictionary
     """
     acc = input("Enter your account number: ")
-    if not acc.isnumeric() and len(acc) != 10:
+    if not acc.isnumeric() or len(acc) != 10:
         print("Invalid account number")
         return
 
@@ -117,4 +117,17 @@ def find_user(customers_data: list):
         return
 
     return customer
+
+
+def display_options_menu():
+    print("1. Create Account")
+    print("2. Deposit")
+    print("3. Withdraw")
+    print("4. Transfer")
+    print("5. Balance")
+    print("6. Transaction History")
+    print("7. Analytics")
+    print("8. Top_3_account")
+    print("9. Find User")
+    print("0. Exit")
 

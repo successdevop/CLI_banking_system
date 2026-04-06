@@ -1,38 +1,42 @@
 from core import *
+from utils import find_user, display_options_menu
+from storage import load_data
 
 
 def main():
+    bank_data = load_data(DATA_FILE)
+
+    # if not bank_data:
+    #     print("No data")
+    #     return
+
     while True:
-        print("1. Create Account")
-        print("2. Deposit")
-        print("3. Withdraw")
-        print("4. Transfer")
-        print("5. Balance")
-        print("6. History")
-        print("7. Top_3_account")
-        print("0. Exit")
+        display_options_menu()
 
         choice = input("> ")
 
         if choice == "1":
-            create_account()
+            create_account(bank_data)
         elif choice == "2":
-            deposit()
+            deposit(bank_data)
         elif choice == "3":
-            withdraw()
+            withdraw(bank_data)
         elif choice == "4":
-            transfer()
+            transfer(bank_data)
         elif choice == "5":
-            check_balance()
+            check_balance(bank_data)
         elif choice == "6":
-            transaction_history()
+            transaction_history(bank_data)
         elif choice == "7":
-            top_3_richest_account()
+            analytics(bank_data)
+        elif choice == "8":
+            top_3_richest_account(bank_data)
+        elif choice == "9":
+            find_user(bank_data)
         elif choice == "0":
             break
         else:
             print("Invalid number")
-        print(users)
         print()
 
 

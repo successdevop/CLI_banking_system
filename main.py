@@ -6,10 +6,6 @@ from storage import load_data
 def main():
     bank_data = load_data(DATA_FILE)
 
-    # if not bank_data:
-    #     print("No data")
-    #     return
-
     while True:
         display_options_menu()
 

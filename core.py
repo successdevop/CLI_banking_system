@@ -1,4 +1,6 @@
 from datetime import datetime
+from storage import log_data
+from config import LOG_MSG
 from utils import *
 
 
@@ -154,7 +156,7 @@ def transaction_history(customers_data: list):
         return
 
     for t in customer["transactions"]:
-        print(f"{t['timestamp'].split('T')[0]} {f'{t["type"]} Out' if t['type'] == 'transfer' else t['type']}: #{t['amount']}")
+        print(f"[{t['timestamp'].split('T')[0]}] {f'{t["type"]} Out' if t['type'] == 'transfer' else t['type']}: #{t['amount']}")
 
 
 def analytics(customers_data: list):
@@ -169,15 +171,13 @@ def analytics(customers_data: list):
 
     highest_transaction = max(customers_data, key=lambda x: len(x.get("transactions")) or 0)
 
-    print(f"""
-    ========= Bank Statistics 2026 =========
-    Total money in the bank:    {total_money_in_the_bank}
-    Richest bank customer:      {richest_customer['name']} (#{richest_customer['balance']})
-    Oldest account holder:      Account number: {oldest_acct['account_number']} - Date created: 
-                                    {oldest_acct['created_at']} - Account holder: {oldest_acct['name']}
-    Account with highest transactions: Account holder: {highest_transaction['name']} - Transactions: 
-                                            {highest_transaction['transactions']}
-    """)
+    print("========= Bank Statistics 2026 =========")
+    print(f"Total money in the bank:              #{total_money_in_the_bank}")
+    print(f"Richest bank customer:                {richest_customer['name']} (#{richest_customer['balance']})")
+    print(f"Oldest account holder:                Account number: {oldest_acct['account_number']} - Date created: "
+          f"{oldest_acct['created_at']} - Account holder: {oldest_acct['name']}")
+    print(f"Account with highest transactions:    Account holder: {highest_transaction['name']} - "
+          f"Transactions: {highest_transaction['transactions']}")
 
 
 def top_3_richest_account(customers_data: list):

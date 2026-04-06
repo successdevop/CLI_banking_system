@@ -7,7 +7,7 @@
         "balance": 0,
         "transactions": [],
         "created_at": "2026-04-06T02:56:05.869028",
-        "user_locked": false
+        "user_locked": true
     },
     {
         "id": 2,
@@ -49,6 +49,6 @@
             }
         ],
         "created_at": "2026-04-06T03:12:36.252196",
-        "user_locked": true
+        "user_locked": false
     }
 ]

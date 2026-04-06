@@ -1,6 +1,6 @@
 import random
-from storage import save_data, log_data
-from config import DATA_FILE, LOG_MSG
+from storage import save_data
+from config import DATA_FILE
 
 
 def authenticate(customers_data: list):
@@ -33,7 +33,7 @@ def authenticate(customers_data: list):
         pin = input("Enter your pin: ")
         if pin != customer["pin"]:
             attempts -= 1
-            print(f"You have {attempts} left")
+            print(f"You have {'No attempts' if attempts == 0 else attempts} left")
         else:
             if pin == customer["pin"]:
                 return customer
@@ -106,7 +106,7 @@ def find_user(customers_data: list):
     :param customers_data: customer's database
     :return: a user dictionary
     """
-    acc = input("Enter your account number: ")
+    acc = input("Enter account number: ")
     if not acc.isnumeric() or len(acc) != 10:
         print("Invalid account number")
         return
@@ -130,4 +130,3 @@ def display_options_menu():
     print("8. Top_3_account")
     print("9. Find User")
     print("0. Exit")
-

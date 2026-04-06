@@ -1,5 +1,6 @@
 from storage import log_data
 from config import LOG_MSG
+from datetime import datetime
 from utils import *
 
 
@@ -11,8 +12,8 @@ def create_account(customer_data: list):
     """
     customer_id = generate_id(customer_data)
     name = validate_name("Please enter your name: ")
-    account_number = generate_secret_keys(customer_data, 10)
-    pin = generate_secret_keys(customer_data, 4)
+    account_number = generate_account_number(customer_data)
+    pin = generate_pin(customer_data)
 
     customer = {"id": customer_id, "name": name, "account_number": account_number, "pin": pin, "balance": 0,
                 "transactions": [], "created_at": datetime.now().isoformat(), "user_locked": False}
@@ -38,16 +39,10 @@ def deposit(customers_data: list):
 
     amount = validate_amount_input("Enter deposit amount: ")
     user["balance"] += amount
-    user["transactions"].append(
-        {
-            "type": "deposit",
-            "amount": amount,
-            "timestamp": datetime.now().isoformat()
-        }
-    )
+    add_transaction(user, "deposit", amount)
 
     save_data(customers_data, DATA_FILE)
-    msg = f"{user['name']} deposited {amount} to your account. Current balance: #{user['balance']}"
+    msg = f"#{amount} was deposited into your account by {user['name']}. Current balance: #{user['balance']}"
     log_data(msg, LOG_MSG)
     print(msg)
 
@@ -72,20 +67,17 @@ def withdraw(customers_data: list):
         print(f"You cannot exceed a daily transaction amount of #50,000")
         return
 
-    if user["balance"] > amount:
-        user["balance"] -= amount
-        user["transactions"].append({
-            "type": "withdrawal",
-            "amount": amount,
-            "timestamp": datetime.now().isoformat()
-        })
-
-        save_data(customers_data, DATA_FILE)
-        msg = f"{user['name'].capitalize()}, you made a withdrawal of #{amount}. Current balance: #{user['balance']}"
-        log_data(msg, LOG_MSG)
-        print(msg)
-    else:
+    if user["balance"] < amount:
         print("Insufficient balance")
+        return
+
+    user["balance"] -= amount
+    add_transaction(user, "withdrawal", amount)
+
+    save_data(customers_data, DATA_FILE)
+    msg = f"{user['name'].capitalize()}, you made a withdrawal of #{amount}. Current balance: #{user['balance']}"
+    log_data(msg, LOG_MSG)
+    print(msg)
 
 
 def transfer(customers_data: list):
@@ -118,33 +110,21 @@ def transfer(customers_data: list):
         print(f"You cannot exceed a daily transaction amount of #50,000")
         return
 
-    if customer["balance"] > amount:
-        customer["balance"] -= amount
-        receiver_acct["balance"] += amount
-
-        customer["transactions"].append(
-            {
-                "type": "transfer",
-                "amount": amount,
-                "timestamp": datetime.now().isoformat()
-            }
-        )
-
-        receiver_acct["transactions"].append(
-            {
-                "type": "deposit",
-                "amount": amount,
-                "timestamp": datetime.now().isoformat()
-            }
-        )
-
-        save_data(customers_data, DATA_FILE)
-        msg = (f"{customer['name'].capitalize()}, made a transfer of #{amount} to {receiver_acct['name']}. "
-               f"Current balance: #{customer['balance']}")
-        log_data(msg, LOG_MSG)
-        print(msg)
-    else:
+    if customer["balance"] < amount:
         print("Insufficient balance")
+        return
+
+    customer["balance"] -= amount
+    receiver_acct["balance"] += amount
+
+    add_transaction(customer, "transfer", amount)
+    add_transaction(receiver_acct, "transfer_in", amount)
+
+    save_data(customers_data, DATA_FILE)
+    msg = (f"{customer['name'].capitalize()}, made a transfer of #{amount} to {receiver_acct['name']}. "
+           f"Current balance: #{customer['balance']}")
+    log_data(msg, LOG_MSG)
+    print(msg)
 
 
 def check_balance(customers_data: list):
@@ -173,13 +153,18 @@ def transaction_history(customers_data: list):
     customer = pagination(customer)
 
     for t in customer:
-        print(f"[{t['timestamp'].split('T')[0]}] {f'{t["type"]} Out' if t['type'] == 'transfer' else t['type']}: #{t['amount']}")
+        label = "Transfer Out" if t["type"] == "transfer" else t["type"].capitalize()
+        print(f"[{t['timestamp'].split('T')[0]}] {label}: #{t['amount']}")
 
 
 def analytics(customers_data: list):
     """
     this function show bank statistics
     """
+    if not customers_data:
+        print("No data available")
+        return
+
     total_money_in_the_bank = sum(c["balance"] for c in customers_data)
 
     richest_customer = max(customers_data, key=lambda x: x.get("balance") or 0, default=None)

@@ -17,27 +17,24 @@ def authenticate(customers_data: list):
     """
     customer = find_user(customers_data)
     if not customer:
-        return
+        return None
 
     if customer["user_locked"]:
         print("Account is locked, user cannot transact, please visit your bank")
-        return
+        return None
 
     attempts = 3
-    while True:
-        if attempts < 1:
-            customer["user_locked"] = True
-            save_data(customers_data, DATA_FILE)
-            print("Account locked")
-            return
-
+    for _ in range(attempts):
         pin = input("Enter your pin: ")
         if pin != customer["pin"]:
             attempts -= 1
-            print(f"You have {'No attempts' if attempts == 0 else attempts} left")
-        else:
-            if pin == customer["pin"]:
-                return customer
+            print(f"Incorrect PIN, you have {'No attempts' if attempts == 0 else attempts} left")
+        return customer
+
+    customer["user_locked"] = True
+    save_data(customers_data, DATA_FILE)
+    print("Account locked")
+    return None
 
 
 def generate_id(customers_data: list) -> int:
@@ -148,7 +145,7 @@ def daily_transaction_limit(customer: dict):
             if t["type"] == "transfer" or t["type"] == "withdrawal":
                 total_today_transaction += t["amount"]
 
-    if total_today_transaction > transaction_limit:
+    if total_today_transaction >= transaction_limit:
         print(f"You cannot exceed a daily transaction of #{transaction_limit}")
         return
     return transaction_limit - total_today_transaction
@@ -164,6 +161,17 @@ def pagination(user: dict, page: int = 1, per_page: int = 5):
     """
     start = (page - 1) * per_page
     return user["transactions"][start:start+per_page]
+
+
+def add_transaction(customer: dict, t_type: str, amount: float):
+    customer["transactions"].append(
+        {
+            "type": t_type,
+            "amount": amount,
+            "timestamp": datetime.now().isoformat()
+        }
+    )
+
 
 
 def display_options_menu():

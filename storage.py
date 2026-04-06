@@ -10,7 +10,7 @@ def log_data(msg, filename):
     :param filename: this is the text file where the message is logged
     """
     with open(filename, mode="a", encoding="utf-8") as log_writer:
-        log_writer.write(f"{datetime.now().strftime('%Y-%m-%d %H:%Mf')}: {msg}\n")
+        log_writer.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}: {msg}\n")
 
 
 def load_data(filename):

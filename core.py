@@ -167,6 +167,8 @@ def transaction_history(customers_data: list):
     if not customer:
         return
 
+    customer = pagination(customer)
+
     for t in customer["transactions"]:
         print(f"[{t['timestamp'].split('T')[0]}] {f'{t["type"]} Out' if t['type'] == 'transfer' else t['type']}: #{t['amount']}")
 

@@ -141,7 +141,16 @@ def daily_transaction_limit(customer: dict):
     return transaction_limit - total_today_transaction
 
 
-
+def pagination(user: dict, page: int = 1, per_page: int = 3):
+    """
+    this function helps to determine how many items/details can be printed per page.
+    It helps to reduce overload on the database
+    :param user: customer/user's information
+    :param page: pages to display
+    :param per_page: number of item per page to be displayed
+    """
+    start = (page - 1) * per_page
+    return user[start:start+per_page]
 
 
 def display_options_menu():

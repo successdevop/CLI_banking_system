@@ -96,8 +96,8 @@ def validate_amount_input(prompt) -> float:
                 return float(amount)
             else:
                 print("Amount must be greater than 0")
-        except:
-            print("Invalid amount: (amount cannot be negative/empty)")
+        except Exception as e:
+            print(f"{e} | Invalid amount: (amount cannot be negative/empty)")
 
 
 def find_user(customers_data: list):

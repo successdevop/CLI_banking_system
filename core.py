@@ -1,4 +1,3 @@
-from datetime import datetime
 from storage import log_data
 from config import LOG_MSG
 from utils import *
@@ -195,7 +194,7 @@ def analytics(customers_data: list):
     print(f"Oldest account holder:                Account number: {oldest_acct['account_number']} - Date created: "
           f"{oldest_acct['created_at']} - Account holder: {oldest_acct['name']}")
     print(f"Account with highest transactions:    Account holder: {highest_transaction['name']} - "
-          f"Transactions: {highest_transaction['transactions']}")
+          f"Transactions: {len(highest_transaction['transactions'])}")
 
 
 def top_3_richest_account(customers_data: list):

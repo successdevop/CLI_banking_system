@@ -65,6 +65,8 @@ def withdraw(customers_data: list):
         return
 
     transaction_limit = daily_transaction_limit(user)
+    if not transaction_limit:
+        return
 
     amount = validate_amount_input("Enter withdrawal amount: ")
     if amount > transaction_limit:
@@ -109,6 +111,8 @@ def transfer(customers_data: list):
         return
 
     transaction_limit = daily_transaction_limit(customer)
+    if not transaction_limit:
+        return
 
     amount = validate_amount_input("Enter transfer amount: ")
     if amount > transaction_limit:
@@ -169,7 +173,7 @@ def transaction_history(customers_data: list):
 
     customer = pagination(customer)
 
-    for t in customer["transactions"]:
+    for t in customer:
         print(f"[{t['timestamp'].split('T')[0]}] {f'{t["type"]} Out' if t['type'] == 'transfer' else t['type']}: #{t['amount']}")
 
 

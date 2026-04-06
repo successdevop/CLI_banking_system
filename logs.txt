@@ -12,3 +12,8 @@
 2026-04-06 09:40f: Thank you for creating an account with us Michael raphael. Your account number is 8969998744
 2026-04-06 09:41f: michael raphael deposited 70000.0 to your account. Current balance: #70000.0
 2026-04-06 09:43f: success deposited 200000.0 to your account. Current balance: #200000.0
+2026-04-06 10:23f: Success, you made a withdrawal of #50000.0. Current balance: #150000.0
+2026-04-06 10:28f: Michael raphael, you made a withdrawal of #10000.0. Current balance: #60000.0
+2026-04-06 10:32f: Michael raphael, made a transfer of #15000.0 to Faith Ezebuiro. Current balance: #45000.0
+2026-04-06 10:34f: Michael raphael, you made a withdrawal of #7000.0. Current balance: #38000.0
+2026-04-06 10:35f: Michael raphael, made a transfer of #10000.0 to Oluchi Raphael. Current balance: #28000.0

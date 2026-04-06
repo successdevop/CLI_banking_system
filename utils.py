@@ -132,16 +132,16 @@ def daily_transaction_limit(customer: dict):
     total_today_transaction = 0
     for t in customer["transactions"]:
         if datetime.fromisoformat(t["timestamp"]).date() == datetime.today().date():
-            if t["type"] == "deposit" or t["type"] == "withdrawal":
+            if t["type"] == "transfer" or t["type"] == "withdrawal":
                 total_today_transaction += t["amount"]
 
     if total_today_transaction > transaction_limit:
-        print(f"You cannot exceed a daily transaction of {transaction_limit}")
+        print(f"You cannot exceed a daily transaction of #{transaction_limit}")
         return
     return transaction_limit - total_today_transaction
 
 
-def pagination(user: dict, page: int = 1, per_page: int = 3):
+def pagination(user: dict, page: int = 1, per_page: int = 5):
     """
     this function helps to determine how many items/details can be printed per page.
     It helps to reduce overload on the database
@@ -150,7 +150,7 @@ def pagination(user: dict, page: int = 1, per_page: int = 3):
     :param per_page: number of item per page to be displayed
     """
     start = (page - 1) * per_page
-    return user[start:start+per_page]
+    return user["transactions"][start:start+per_page]
 
 
 def display_options_menu():

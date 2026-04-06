@@ -4,10 +4,16 @@
         "name": "success",
         "account_number": "2586344242",
         "pin": "4335",
-        "balance": 0,
-        "transactions": [],
+        "balance": 200000.0,
+        "transactions": [
+            {
+                "type": "deposit",
+                "amount": 200000.0,
+                "timestamp": "2026-04-06T09:43:23.317912"
+            }
+        ],
         "created_at": "2026-04-06T02:56:05.869028",
-        "user_locked": true
+        "user_locked": false
     },
     {
         "id": 2,
@@ -49,6 +55,22 @@
             }
         ],
         "created_at": "2026-04-06T03:12:36.252196",
+        "user_locked": false
+    },
+    {
+        "id": 4,
+        "name": "michael raphael",
+        "account_number": "8969998744",
+        "pin": "7482",
+        "balance": 70000.0,
+        "transactions": [
+            {
+                "type": "deposit",
+                "amount": 70000.0,
+                "timestamp": "2026-04-06T09:41:05.353131"
+            }
+        ],
+        "created_at": "2026-04-06T09:40:15.063464",
         "user_locked": false
     }
 ]

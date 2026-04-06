@@ -90,13 +90,13 @@ def validate_amount_input(prompt) -> float:
     :return: float number
     """
     while True:
-        amount = input(prompt)
-        if amount.isnumeric():
+        try:
+            amount = float(input(prompt))
             if float(amount) > 0:
                 return float(amount)
             else:
                 print("Amount must be greater than 0")
-        else:
+        except:
             print("Invalid amount: (amount cannot be negative/empty)")
 
 
@@ -131,11 +131,11 @@ def daily_transaction_limit(customer: dict):
     transaction_limit = 50000
     total_today_transaction = 0
     for t in customer["transactions"]:
-        if t["timestamp"].date() == datetime.today().date():
+        if datetime.fromisoformat(t["timestamp"]).date() == datetime.today().date():
             if t["type"] == "deposit" or t["type"] == "withdrawal":
                 total_today_transaction += t["amount"]
 
-    if total_today_transaction == transaction_limit:
+    if total_today_transaction > transaction_limit:
         print(f"You cannot exceed a daily transaction of {transaction_limit}")
         return
     return transaction_limit - total_today_transaction

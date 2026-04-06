@@ -1,6 +1,7 @@
 import random
 from storage import save_data
 from config import DATA_FILE
+from datetime import datetime
 
 
 def authenticate(customers_data: list):
@@ -117,6 +118,30 @@ def find_user(customers_data: list):
         return
 
     return customer
+
+
+def daily_transaction_limit(customer: dict):
+    """
+    this function checks if a customer/account holder has exceeded their transaction limit for
+    that day. If they have exceeded the limit, the function prints out a message to that effect
+    and ends the transaction but if not, the amount of transaction left to be done or that can
+    be done for that day is returned
+    :param customer: user details
+    """
+    transaction_limit = 50000
+    total_today_transaction = 0
+    for t in customer["transactions"]:
+        if t["timestamp"].date() == datetime.today().date():
+            if t["type"] == "deposit" or t["type"] == "withdrawal":
+                total_today_transaction += t["amount"]
+
+    if total_today_transaction == transaction_limit:
+        print(f"You cannot exceed a daily transaction of {transaction_limit}")
+        return
+    return transaction_limit - total_today_transaction
+
+
+
 
 
 def display_options_menu():

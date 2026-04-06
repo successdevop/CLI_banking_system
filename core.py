@@ -64,7 +64,13 @@ def withdraw(customers_data: list):
     if not user:
         return
 
+    transaction_limit = daily_transaction_limit(user)
+
     amount = validate_amount_input("Enter withdrawal amount: ")
+    if amount > transaction_limit:
+        print(f"You cannot exceed a daily transaction amount of #50,000")
+        return
+
     if user["balance"] > amount:
         user["balance"] -= amount
         user["transactions"].append({
@@ -102,7 +108,13 @@ def transfer(customers_data: list):
         print("You can't transfer to self")
         return
 
+    transaction_limit = daily_transaction_limit(customer)
+
     amount = validate_amount_input("Enter transfer amount: ")
+    if amount > transaction_limit:
+        print(f"You cannot exceed a daily transaction amount of #50,000")
+        return
+
     if customer["balance"] > amount:
         customer["balance"] -= amount
         receiver_acct["balance"] += amount
